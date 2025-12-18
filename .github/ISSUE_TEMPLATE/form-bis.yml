@@ -1,0 +1,477 @@
+name: Expression de Besoin CI-SIS
+description: Formulaire d'expression de besoin en matière d'interopérabilité pour le Cadre d'Interopérabilité des Systèmes d'Information de Santé
+title: "[BESOIN] "
+labels: ["besoin", "ci-sis"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Cadre d'Interopérabilité des Systèmes d'Information de Santé (CI-SIS)
+
+        ## FORMULAIRE D'EXPRESSION DE BESOIN EN MATIERE D'INTEROPERABILITE
+
+        Ce formulaire doit être utilisé par tout acteur des domaines sanitaire, médico-social et médico-administratif pour formaliser une expression de besoin d'interopérabilité susceptible de donner lieu à une évolution et/ou un enrichissement du CI-SIS.
+
+  # ==========================================
+  # 1. DESCRIPTION GÉNÉRALE DU BESOIN
+  # ==========================================
+  - type: markdown
+    attributes:
+      value: |
+        ## 1. Description générale du besoin
+
+  - type: input
+    id: titre
+    attributes:
+      label: Titre du besoin
+      description: Titre court et explicite du besoin
+      placeholder: Ex. Intégration des données de vaccination dans le DMP
+    validations:
+      required: true
+
+  - type: textarea
+    id: porteur
+    attributes:
+      label: Porteur du besoin
+      description: |
+        Le porteur de besoins sera le correspondant principal de l'ANS pour tout échange durant l'analyse de votre demande.
+        Format : Nom et Prénom | Organisation | Email | Téléphone
+      placeholder: |
+        Nom : Jean Dupont
+        Organisation : CHU de Paris
+        Email : jean.dupont@chu-paris.fr
+        Téléphone : +33 1 23 45 67 89
+    validations:
+      required: true
+
+  - type: textarea
+    id: sponsors
+    attributes:
+      label: Sponsors
+      description: Organismes qui appuient et soutiennent la demande du porteur du besoin
+      placeholder: |
+        - Organisation 1
+        - Organisation 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: parties-prenantes
+    attributes:
+      label: Parties prenantes
+      description: Autres acteurs impliqués dans l'expression du besoin
+      placeholder: Liste des parties prenantes
+
+  - type: textarea
+    id: contexte
+    attributes:
+      label: Contexte du besoin
+      description: Décrire le contexte dans lequel s'inscrit ce besoin
+    validations:
+      required: true
+
+  - type: dropdown
+    id: projet-national
+    attributes:
+      label: Ce besoin s'inscrit-il dans le cadre d'un projet ou programme national/international ?
+      options:
+        - Non
+        - Oui
+    validations:
+      required: true
+
+  - type: textarea
+    id: projet-national-details
+    attributes:
+      label: Si oui, précisez le projet
+      description: Indiquer les références, textes de loi, etc.
+      placeholder: Détails du projet ou programme
+
+  - type: dropdown
+    id: complement-besoin
+    attributes:
+      label: Ce besoin correspond-il à un complément d'une expression de besoin en cours d'instruction par l'ANS ?
+      options:
+        - Non
+        - Oui
+    validations:
+      required: true
+
+  - type: textarea
+    id: complement-besoin-details
+    attributes:
+      label: Si oui, précisez les références
+      placeholder: Références du besoin existant
+
+  - type: textarea
+    id: delai-contraintes
+    attributes:
+      label: Délai et contraintes projet
+      description: Indiquer vos contraintes de délai (jalons projet, contraintes réglementaires, etc.)
+      placeholder: Ex. Mise en production prévue pour Q3 2025
+
+  - type: markdown
+    attributes:
+      value: |
+        ### Impact et intérêt de la demande
+        Évaluez l'impact et l'intérêt de votre demande (1 = faible, 5 = fort)
+
+  - type: dropdown
+    id: impact-systemes
+    attributes:
+      label: Impact sur les systèmes
+      options:
+        - "1 - Faible"
+        - "2"
+        - "3 - Moyen"
+        - "4"
+        - "5 - Fort"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: interet-ecosysteme
+    attributes:
+      label: Intérêt pour l'écosystème
+      options:
+        - "1 - Faible"
+        - "2"
+        - "3 - Moyen"
+        - "4"
+        - "5 - Fort"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: estimation-complexite
+    attributes:
+      label: Estimation de la complexité
+      options:
+        - "1 - Faible"
+        - "2"
+        - "3 - Moyenne"
+        - "4"
+        - "5 - Fort"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risque-ne-pas-faire
+    attributes:
+      label: Risque à ne pas faire
+      options:
+        - "1 - Faible"
+        - "2"
+        - "3 - Moyen"
+        - "4"
+        - "5 - Fort"
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification-impacts
+    attributes:
+      label: Justification des impacts
+      description: Décrire et justifier les impacts et les intérêts de la demande
+      placeholder: |
+        - Impacts sur les systèmes d'information : ...
+        - Intérêt pour l'écosystème : ...
+        - Estimation de la complexité : ...
+        - Risques à ne pas faire : ...
+        - Autre(s) intérêt(s) et/ou impact(s) identifié(s) : ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: synthese-besoin
+    attributes:
+      label: Synthèse du besoin exprimé
+      description: Description synthétique en quelques lignes
+    validations:
+      required: true
+
+  # ==========================================
+  # 2. TYPE DE BESOIN
+  # ==========================================
+  - type: markdown
+    attributes:
+      value: |
+        ## 2. Type de besoin
+        Sélectionnez le(s) type(s) de besoin concerné(s)
+
+  - type: checkboxes
+    id: type-besoin
+    attributes:
+      label: Type(s) de besoin
+      description: Vous pouvez sélectionner plusieurs types
+      options:
+        - label: Besoin syntaxique (transmission de contenu, actions entre composants informatiques)
+        - label: Besoin sémantique (ressources sémantiques, terminologies, jeux de valeurs)
+        - label: Besoin en publication de connaissance médicale (GBPC, CQL, SADC)
+
+  # ==========================================
+  # 3. EXPRESSION DE BESOIN SYNTAXIQUE
+  # ==========================================
+  - type: markdown
+    attributes:
+      value: |
+        ## 3. Expression de besoin syntaxique
+        *Compléter cette section uniquement si vous avez coché "Besoin syntaxique"*
+
+  - type: textarea
+    id: syntaxique-cas-usage
+    attributes:
+      label: Cas d'usage syntaxique
+      description: |
+        Décrire le(s) cas d'usage métier :
+        - Les transmissions de contenu à effectuer de manière dématérialisée
+        - Les actions réalisées via un composant informatique sur un autre composant
+      placeholder: |
+        Décrire le cas d'usage sous forme d'une petite histoire...
+
+  - type: textarea
+    id: syntaxique-problematique
+    attributes:
+      label: Problématique syntaxique
+      description: Expliquer la problématique rencontrée en termes d'interopérabilité
+      placeholder: Décrire la problématique...
+
+  - type: textarea
+    id: syntaxique-echanges
+    attributes:
+      label: Description des échanges entre systèmes
+      description: |
+        Lister les différents modules des SI intervenant dans les échanges.
+        Décrire le rôle de chaque module et ses interactions.
+      placeholder: |
+        Module source : ...
+        Module destinataire : ...
+        Objectif général : ...
+        Principales données transmises : ...
+        Prérequis et évènement(s) déclencheur(s) : ...
+        Action(s) déclenchée(s) : ...
+        Volume des échanges : ...
+
+  # ==========================================
+  # 4. EXPRESSION DE BESOIN SÉMANTIQUE
+  # ==========================================
+  - type: markdown
+    attributes:
+      value: |
+        ## 4. Expression de besoin sémantique
+        *Compléter cette section uniquement si vous avez coché "Besoin sémantique"*
+
+  - type: textarea
+    id: semantique-cas-usage
+    attributes:
+      label: Cas d'usage sémantique
+      description: |
+        Décrire comment est utilisée actuellement et/ou sera utilisée la ressource sémantique.
+        Thématiques : Production de soins, Coordination interprofessionnelle, Pilotage, Exploitation de données
+      placeholder: Décrire le cas d'usage...
+
+  - type: textarea
+    id: semantique-problematique
+    attributes:
+      label: Problématique sémantique
+      description: |
+        Expliquer la problématique en termes d'interopérabilité.
+        Décrire la situation actuelle et la situation cible.
+      placeholder: |
+        Situation actuelle : ...
+        Situation cible : ...
+        Besoin en ressources sémantiques : ...
+
+  - type: dropdown
+    id: semantique-connaissance-up
+    attributes:
+      label: Connaissez-vous l'unité de production de la ressource sémantique ?
+      options:
+        - Non
+        - Oui
+
+  - type: textarea
+    id: semantique-up-details
+    attributes:
+      label: Si oui, détails de l'unité de production
+      placeholder: |
+        Nom de l'unité de production : ...
+        Organisme : ...
+        Composition de l'équipe : ...
+
+  - type: dropdown
+    id: semantique-politique-gestion
+    attributes:
+      label: Existe-t-il une politique de gestion de cette ressource sémantique ?
+      options:
+        - Je ne sais pas
+        - Non
+        - Oui
+
+  - type: dropdown
+    id: semantique-licence
+    attributes:
+      label: Cette ressource sémantique est-elle soumise à une licence ?
+      options:
+        - Je ne sais pas
+        - Non
+        - Oui
+
+  - type: input
+    id: semantique-licence-type
+    attributes:
+      label: Si oui, précisez la licence
+      placeholder: Ex. LOV2, CC-BY, etc.
+
+  - type: textarea
+    id: semantique-modalites-acces
+    attributes:
+      label: Modalités d'accès à la ressource sémantique
+      description: Expliquer les modalités d'accès (traçabilité, mode connecté, etc.)
+
+  - type: input
+    id: semantique-format
+    attributes:
+      label: Format actuel de la ressource sémantique
+      placeholder: Ex. Excel, PDF, Access, CSV, etc.
+
+  - type: input
+    id: semantique-volumetrie
+    attributes:
+      label: Volumétrie estimée
+      description: Nombre de concepts codés
+      placeholder: Ex. 5000 concepts
+
+  - type: dropdown
+    id: semantique-maturite
+    attributes:
+      label: Niveau de maturité de la structure
+      options:
+        - Je ne sais pas
+        - En construction
+        - Stabilisée
+        - En usage
+        - En test
+
+  - type: textarea
+    id: semantique-maturite-details
+    attributes:
+      label: Si en test ou en usage, détaillez le cas d'usage
+
+  - type: dropdown
+    id: semantique-interactions
+    attributes:
+      label: Cette ressource a-t-elle des interactions/liens avec d'autres ressources sémantiques ?
+      options:
+        - Je ne sais pas
+        - Non
+        - Oui
+
+  - type: textarea
+    id: semantique-interactions-details
+    attributes:
+      label: Si oui, précisez les interactions
+
+  - type: checkboxes
+    id: semantique-langues
+    attributes:
+      label: Langues existantes de la ressource sémantique
+      options:
+        - label: Français
+        - label: Anglais
+        - label: Autre(s) langue(s)
+
+  - type: input
+    id: semantique-autres-langues
+    attributes:
+      label: Si autres langues, précisez lesquelles
+
+  - type: textarea
+    id: semantique-utilisateurs
+    attributes:
+      label: Utilisateurs de la ressource sémantique
+      description: Qui utilise ou utilisera cette ressource ?
+
+  - type: checkboxes
+    id: semantique-attentes
+    attributes:
+      label: Vos attentes vis-à-vis de l'ANS
+      options:
+        - label: Assistance à maîtrise d'ouvrage
+        - label: Publication de la ressource sémantique
+        - label: Autres attentes (précisez ci-dessous)
+
+  - type: textarea
+    id: semantique-attentes-autres
+    attributes:
+      label: Autres attentes
+
+  - type: dropdown
+    id: semantique-frequence-maj
+    attributes:
+      label: Fréquence de mise à jour de la ressource sémantique
+      options:
+        - Mensuelle
+        - Annuelle
+        - Autre
+
+  - type: input
+    id: semantique-frequence-maj-autre
+    attributes:
+      label: Si autre fréquence, précisez
+
+  # ==========================================
+  # 5. BESOIN EN PUBLICATION DE CONNAISSANCE
+  # ==========================================
+  - type: markdown
+    attributes:
+      value: |
+        ## 5. Expression de besoin en publication de connaissance médicale
+        *Compléter cette section uniquement si vous avez coché "Besoin en publication de connaissance médicale"*
+
+  - type: textarea
+    id: connaissance-cas-usage
+    attributes:
+      label: Cas d'usage pour la publication de connaissance
+      description: |
+        Indiquer si le besoin concerne :
+        - La standardisation d'un Guide de Bonnes Pratiques Cliniques (GBPC)
+        - Le développement d'une bibliothèque CQL
+        - Le déploiement de bibliothèques CQL sous forme de SADC avec CDS Hooks
+      placeholder: |
+        Décrire le cas d'usage avec diagrammes UML si possible...
+        Préciser : acteurs, flux, composants logiciels
+
+  # ==========================================
+  # 6. INFORMATIONS COMPLÉMENTAIRES
+  # ==========================================
+  - type: markdown
+    attributes:
+      value: |
+        ## 6. Informations complémentaires
+
+  - type: textarea
+    id: commentaires
+    attributes:
+      label: Commentaires
+      description: Tout élément essentiel non renseigné dans les sections précédentes
+      placeholder: Ajouter des commentaires supplémentaires...
+
+  - type: textarea
+    id: documents-complementaires
+    attributes:
+      label: Documents complémentaires
+      description: |
+        Listez les documents joints (spécifications, descriptions détaillées, etc.)
+        Vous pourrez les joindre après la création de l'issue
+      placeholder: |
+        - Document 1 : description...
+        - Document 2 : description...
+
+  - type: checkboxes
+    id: conditions
+    attributes:
+      label: Confirmation
+      options:
+        - label: Je confirme que les informations fournies sont exactes et complètes
+          required: true
