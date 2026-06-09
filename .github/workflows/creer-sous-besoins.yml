@@ -20,6 +20,7 @@ jobs:
       PARENT_NUMBER: ${{ github.event.issue.number }}
       PARENT_TITLE: ${{ github.event.issue.title }}
       BODY: ${{ github.event.issue.body }}
+      SERVER_URL: ${{ github.server_url }}
     steps:
       - name: Récupérer l'ID de nœud de l'issue parent
         id: parent
@@ -27,28 +28,162 @@ jobs:
           PARENT_ID=$(gh issue view "$PARENT_NUMBER" --repo "$OWNER/$REPO" --json id --jq .id)
           echo "parent_id=$PARENT_ID" >> "$GITHUB_OUTPUT"
 
+      - name: Écrire les gabarits Markdown des volets
+        run: |
+          set -euo pipefail
+          mkdir -p gabarits
+
+          # Base d'URL des formulaires interactifs (pré-remplit le champ "parent" = #NUMÉRO)
+          NEWURL="${SERVER_URL}/${OWNER}/${REPO}/issues/new"
+          PARENT_ENC="%23${PARENT_NUMBER}"
+
+          LIEN_SYNT="> 💡 Vous préférez saisir via le formulaire web ? [Ouvrir le formulaire interactif syntaxique](${NEWURL}?template=01-besoin-syntaxique.yml&parent=${PARENT_ENC}) _(crée une nouvelle issue ; refermez ensuite ce volet en doublon le cas échéant)._"
+          LIEN_SEM="> 💡 Vous préférez saisir via le formulaire web ? [Ouvrir le formulaire interactif sémantique](${NEWURL}?template=02-besoin-semantique.yml&parent=${PARENT_ENC}) _(crée une nouvelle issue ; refermez ensuite ce volet en doublon le cas échéant)._"
+          LIEN_CM="> 💡 Vous préférez saisir via le formulaire web ? [Ouvrir le formulaire interactif connaissance médicale](${NEWURL}?template=03-connaissance-medicale.yml&parent=${PARENT_ENC}) _(crée une nouvelle issue ; refermez ensuite ce volet en doublon le cas échéant)._"
+
+          RGPD='> [!CAUTION]
+          > Issue publique : **aucune donnée personnelle** (nom, e-mail, téléphone).
+          > Coordonnées à transmettre par e-mail à ci-sis@esante.gouv.fr.'
+
+          # ---------- Volet syntaxique ----------
+          cat > gabarits/syntaxique.md << MD
+          ## Volet syntaxique — parent #${PARENT_NUMBER}
+
+          ${LIEN_SYNT}
+
+          ${RGPD}
+
+          ### Cas d'usage
+          _Transmissions de contenu dématérialisées et/ou actions entre composants informatiques. Sous forme de scénario si possible._
+
+
+
+          ### Problématique d'interopérabilité
+
+
+
+          ### Description des échanges entre systèmes (optionnel)
+          _Modules, rôles, interactions. Pour chaque échange : module source, module destinataire, objectif, données transmises, prérequis/déclencheurs, actions, volume._
+
+
+          MD
+
+          # ---------- Volet sémantique ----------
+          cat > gabarits/semantique.md << MD
+          ## Volet sémantique — parent #${PARENT_NUMBER}
+
+          ${LIEN_SEM}
+
+          ${RGPD}
+
+          ### Cas d'usage
+          _Comment la ressource est/sera utilisée (production de soins, coordination, pilotage, exploitation de données)._
+
+
+
+          ### Problématique
+          _Situation actuelle vs cible ; besoin en ressources sémantiques (domaine cible, terminologie vs jeux de valeurs, alignements)._
+
+
+
+          ### Unité de production
+          - [ ] Je connais l'unité de production
+          - [ ] Je ne connais pas l'unité de production
+
+          **Détails (organisme, composition équipe ; pas de noms de personnes) :**
+
+
+
+          ### Politique de gestion existante ?
+          - [ ] Oui
+          - [ ] Non
+          - [ ] Je ne sais pas
+
+          ### Soumise à une licence ?
+          - [ ] Oui
+          - [ ] Non
+          - [ ] Je ne sais pas
+
+          **Licence précisée + modalités d'accès (si autre que LOV2) :**
+
+
+
+          ### Format actuel (Excel, PDF, Access…)
+
+
+          ### Volumétrie estimée (nombre de concepts codés)
+
+
+          ### Niveau de maturité
+          - [ ] En construction
+          - [ ] Stabilisée
+          - [ ] En usage
+          - [ ] En test
+          - [ ] Je ne sais pas
+
+          ### Interactions avec d'autres ressources (lesquelles ?)
+
+
+
+          ### Langues (Français et/ou autres, préciser)
+
+
+          ### Utilisateurs de la ressource (types, pas de personnes nommées)
+
+
+
+          ### Attentes vis-à-vis de l'ANS + fréquence de mise à jour
+          - [ ] Assistance à maîtrise d'ouvrage (AMOA)
+          - [ ] Publication de la ressource sémantique
+          - [ ] Autres (préciser)
+
+          **Fréquence de mise à jour :**
+
+
+          MD
+
+          # ---------- Volet connaissance médicale ----------
+          cat > gabarits/connaissance-medicale.md << MD
+          ## Volet connaissance médicale — parent #${PARENT_NUMBER}
+
+          ${LIEN_CM}
+
+          ${RGPD}
+
+          ### Nature
+          - [ ] Standardisation d'un GBPC
+          - [ ] Développement d'une bibliothèque CQL
+          - [ ] Déploiement de bibliothèques CQL en SADC (CDS Hooks)
+
+          ### Cas d'usage (acteurs, flux, composants ; UML conseillé)
+          _Méthode : https://ansforge.github.io/CISIS-doctrine-gouvernance/pages/docs/elaboration.html — joignez les diagrammes en images, sans données personnelles._
+
+
+          MD
+
+          echo "Gabarits écrits :" && ls -1 gabarits
+
       - name: Créer les sous-issues selon les cases cochées
         env:
           PARENT_ID: ${{ steps.parent.outputs.parent_id }}
         run: |
           set -euo pipefail
 
-          # Lit le corps de l'issue et détecte les cases cochées "- [x]".
-          # On teste chaque volet par son libellé.
           creer_sous_issue () {
-            local libelle="$1"      # ex. "Syntaxique"
+            local libelle="$1"      # libellé de la case dans le parent (ex. "Syntaxique")
             local titre="$2"        # titre de la sous-issue
             local label="$3"        # label thématique
-            local corps="$4"        # gabarit du corps
+            local gabarit="$4"      # fichier Markdown du corps
 
-            echo "$BODY" | grep -iqE "^\- \[x\] +${libelle}\b" || return 0
+            # Détecte la case cochée "- [x] Libellé" dans le corps du parent
+            echo "$BODY" | grep -iqE '^[[:space:]]*-[[:space:]]+\[x\][[:space:]]+'"${libelle}"'\b' || return 0
 
             echo "Création de la sous-issue : $titre"
             CHILD_URL=$(gh issue create \
               --repo "$OWNER/$REPO" \
               --title "$titre" \
               --label "expression-besoin" --label "$label" --label "sous-besoin" \
-              --body "$corps")
+              --body-file "$gabarit")
             CHILD_NUMBER="${CHILD_URL##*/}"
 
             CHILD_ID=$(gh issue view "$CHILD_NUMBER" --repo "$OWNER/$REPO" --json id --jq .id)
@@ -65,10 +200,6 @@ jobs:
               -f child="$CHILD_ID"
           }
 
-          CORPS_SYNT=$'## Volet syntaxique (parent #'"$PARENT_NUMBER"$')\n\nÀ compléter : cas d\x27usage, problématique d\x27interopérabilité, échanges entre systèmes.\n\n> Issue publique : aucune donnée personnelle. Coordonnées par e-mail à ci-sis@esante.gouv.fr.'
-          CORPS_SEM=$'## Volet sémantique (parent #'"$PARENT_NUMBER"$')\n\nÀ compléter : cas d\x27usage, problématique, unité de production, licence, format, volumétrie, maturité, langues, utilisateurs, attentes.\n\n> Issue publique : aucune donnée personnelle. Coordonnées par e-mail à ci-sis@esante.gouv.fr.'
-          CORPS_CM=$'## Volet connaissance médicale (parent #'"$PARENT_NUMBER"$')\n\nÀ compléter : nature (GBPC / CQL / SADC), cas d\x27usage (UML).\n\n> Issue publique : aucune donnée personnelle. Coordonnées par e-mail à ci-sis@esante.gouv.fr.'
-
-          creer_sous_issue "Syntaxique"            "[Syntaxique] $PARENT_TITLE"            "syntaxique"           "$CORPS_SYNT"
-          creer_sous_issue "Sémantique"            "[Sémantique] $PARENT_TITLE"            "semantique"           "$CORPS_SEM"
-          creer_sous_issue "Connaissance médicale" "[Connaissance médicale] $PARENT_TITLE" "connaissance-medicale" "$CORPS_CM"
+          creer_sous_issue "Syntaxique"            "[Syntaxique] $PARENT_TITLE"            "syntaxique"            "gabarits/syntaxique.md"
+          creer_sous_issue "Sémantique"            "[Sémantique] $PARENT_TITLE"            "semantique"            "gabarits/semantique.md"
+          creer_sous_issue "Connaissance médicale" "[Connaissance médicale] $PARENT_TITLE" "connaissance-medicale" "gabarits/connaissance-medicale.md"

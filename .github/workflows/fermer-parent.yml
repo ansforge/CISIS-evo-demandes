@@ -1,0 +1,73 @@
+name: Fermer le parent si tous les sous-besoins sont clos
+
+# Se déclenche à la fermeture d'une issue. Si l'issue close a un parent, on
+# vérifie l'état des sous-issues du parent ; si toutes sont closes, on ferme
+# le parent automatiquement.
+on:
+  issues:
+    types: [closed]
+
+permissions:
+  issues: write
+
+jobs:
+  fermer-parent:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      OWNER: ${{ github.repository_owner }}
+      REPO: ${{ github.event.repository.name }}
+      CLOSED_NUMBER: ${{ github.event.issue.number }}
+    steps:
+      - name: Déterminer le parent et l'état de ses sous-issues
+        id: check
+        run: |
+          set -euo pipefail
+
+          CLOSED_ID=$(gh issue view "$CLOSED_NUMBER" --repo "$OWNER/$REPO" --json id --jq .id)
+
+          # Récupère le parent de l'issue qui vient d'être close
+          PARENT_NUMBER=$(gh api graphql \
+            -H "GraphQL-Features: sub_issues" \
+            -f query='query($id: ID!) {
+              node(id: $id) { ... on Issue { parent { number } } }
+            }' \
+            -f id="$CLOSED_ID" \
+            --jq '.data.node.parent.number // empty')
+
+          if [ -z "$PARENT_NUMBER" ]; then
+            echo "Pas de parent : rien à faire."
+            echo "do_close=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          PARENT_ID=$(gh issue view "$PARENT_NUMBER" --repo "$OWNER/$REPO" --json id --jq .id)
+
+          # Résumé des sous-issues du parent
+          read -r TOTAL COMPLETED < <(gh api graphql \
+            -H "GraphQL-Features: sub_issues" \
+            -f query='query($id: ID!) {
+              node(id: $id) { ... on Issue { subIssuesSummary { total completed } } }
+            }' \
+            -f id="$PARENT_ID" \
+            --jq '"\(.data.node.subIssuesSummary.total) \(.data.node.subIssuesSummary.completed)"')
+
+          echo "Parent #$PARENT_NUMBER : $COMPLETED/$TOTAL sous-issues closes."
+
+          # Vérifie aussi que le parent est encore ouvert
+          PARENT_STATE=$(gh issue view "$PARENT_NUMBER" --repo "$OWNER/$REPO" --json state --jq .state)
+
+          if [ "$TOTAL" -gt 0 ] && [ "$COMPLETED" -eq "$TOTAL" ] && [ "$PARENT_STATE" = "OPEN" ]; then
+            echo "do_close=true" >> "$GITHUB_OUTPUT"
+            echo "parent_number=$PARENT_NUMBER" >> "$GITHUB_OUTPUT"
+          else
+            echo "do_close=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fermer le parent
+        if: steps.check.outputs.do_close == 'true'
+        env:
+          PARENT_NUMBER: ${{ steps.check.outputs.parent_number }}
+        run: |
+          gh issue close "$PARENT_NUMBER" --repo "$OWNER/$REPO" \
+            --comment "Tous les sous-besoins sont clos : fermeture automatique de l'issue parent."
