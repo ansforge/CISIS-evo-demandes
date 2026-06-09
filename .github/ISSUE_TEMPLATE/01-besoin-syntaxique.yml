@@ -1,0 +1,49 @@
+name: "Sous-besoin — Syntaxique"
+description: "Volet syntaxique d'un besoin CI-SIS. À rattacher comme sub-issue d'une issue parent « Expression de besoin »."
+title: "[Syntaxique] "
+labels: ["expression-besoin", "syntaxique", "sous-besoin"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Volet syntaxique
+
+        > [!NOTE]
+        > Cette issue est un **volet** d'un besoin global. Renseignez le numéro de
+        > l'issue parent ci-dessous. La description générale (porteur, impact,
+        > synthèse) est portée par l'issue parent et n'est pas à répéter ici.
+
+        > [!CAUTION]
+        > Issue publique : **aucune donnée personnelle** (nom, e-mail, téléphone).
+        > Coordonnées à transmettre par e-mail à ci-sis@esante.gouv.fr.
+
+  - type: input
+    id: parent
+    attributes:
+      label: Issue parent
+      description: "Numéro de l'issue d'expression de besoin globale (ex. #123)."
+    validations:
+      required: true
+
+  - type: textarea
+    id: synt-cas-usage
+    attributes:
+      label: Cas d'usage
+      description: "Transmissions de contenu dématérialisées et/ou actions entre composants informatiques."
+    validations:
+      required: true
+
+  - type: textarea
+    id: synt-problematique
+    attributes:
+      label: Problématique d'interopérabilité
+    validations:
+      required: true
+
+  - type: textarea
+    id: synt-echanges
+    attributes:
+      label: Description des échanges entre systèmes (optionnel)
+      description: "Modules, rôles, interactions ; pour chaque échange : source, destinataire, objectif, données, déclencheurs, actions, volume."
+    validations:
+      required: false

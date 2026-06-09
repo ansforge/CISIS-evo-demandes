@@ -1,0 +1,363 @@
+name: "Expression de besoin d'interopérabilité (CI-SIS)"
+description: "Formulaire unique : description générale + sections syntaxique / sémantique / connaissance médicale selon le besoin."
+title: "[Besoin] "
+labels: ["expression-besoin"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Formulaire d'expression de besoin d'interopérabilité — CI-SIS
+
+        Remplissez **la section 1 (obligatoire)**, puis **uniquement** la ou les
+        sections correspondant à votre besoin (2 syntaxique, 3 sémantique,
+        4 connaissance médicale). Laissez vides les sections non concernées.
+
+        > [!CAUTION]
+        > **Protection des données personnelles (RGPD)**
+        > Une issue GitHub est **publique**. **Ne renseignez ici aucune donnée à
+        > caractère personnel** (nom, prénom, e-mail nominatif, téléphone), ni pour
+        > vous, ni pour les sponsors ou parties prenantes. Désignez les acteurs par
+        > **organisation** et **rôle** uniquement, et transmettez les coordonnées
+        > **par e-mail** à `ci-sis@esante.gouv.fr` en rappelant le numéro de l'issue.
+
+  # ───────────────────────── SECTION 1 — Description générale ─────────────────────────
+  - type: markdown
+    attributes:
+      value: "## 1. Description générale du besoin (obligatoire)"
+
+  - type: input
+    id: titre
+    attributes:
+      label: Titre du besoin
+    validations:
+      required: true
+
+  - type: input
+    id: porteur-organisation
+    attributes:
+      label: Organisation porteuse du besoin
+      description: Organisation uniquement. Coordonnées du porteur à transmettre par e-mail.
+    validations:
+      required: true
+
+  - type: input
+    id: sponsors
+    attributes:
+      label: Organismes sponsors
+    validations:
+      required: true
+
+  - type: input
+    id: parties-prenantes
+    attributes:
+      label: Parties prenantes (optionnel)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: cadre-projet
+    attributes:
+      label: Cadre projet/programme national ou international ?
+      options:
+        - "Non"
+        - "Oui (préciser ci-dessous)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: cadre-projet-detail
+    attributes:
+      label: Précisions sur le cadre projet (références, textes de loi…)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: complement-instruction
+    attributes:
+      label: Complément d'une demande déjà en instruction à l'ANS ?
+      options:
+        - "Non"
+        - "Oui (préciser ci-dessous)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: complement-detail
+    attributes:
+      label: Références de la demande complétée (optionnel)
+    validations:
+      required: false
+
+  - type: textarea
+    id: contraintes-delai
+    attributes:
+      label: Délai et contraintes projet (optionnel)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: impact-systemes
+    attributes:
+      label: "Impact sur les systèmes (1 = faible … 5 = fort)"
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: interet-ecosysteme
+    attributes:
+      label: "Intérêt pour l'écosystème (1 = faible … 5 = fort)"
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexite
+    attributes:
+      label: "Estimation de la complexité (1 = faible … 5 = fort)"
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risque
+    attributes:
+      label: "Risque à ne pas faire (1 = faible … 5 = fort)"
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: impacts-justification
+    attributes:
+      label: Justification des impacts et intérêts
+      description: "Impacts sur les SI, intérêt pour l'écosystème, complexité, risques à ne pas faire, autres."
+    validations:
+      required: true
+
+  - type: textarea
+    id: synthese
+    attributes:
+      label: Synthèse du besoin (quelques lignes)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: nature
+    attributes:
+      label: Nature du besoin
+      description: Cochez la/les section(s) que vous remplissez ci-dessous.
+      multiple: true
+      options:
+        - "Syntaxique (section 2)"
+        - "Sémantique (section 3)"
+        - "Connaissance médicale (section 4)"
+    validations:
+      required: true
+
+  # ───────────────────────── SECTION 2 — Syntaxique ─────────────────────────
+  - type: markdown
+    attributes:
+      value: "## 2. Expression de besoin syntaxique (à remplir si concerné)"
+
+  - type: textarea
+    id: synt-cas-usage
+    attributes:
+      label: "Syntaxique — Cas d'usage"
+      description: "Transmissions de contenu dématérialisées et/ou actions entre composants informatiques. Sous forme de scénario si possible."
+    validations:
+      required: false
+
+  - type: textarea
+    id: synt-problematique
+    attributes:
+      label: "Syntaxique — Problématique d'interopérabilité"
+    validations:
+      required: false
+
+  - type: textarea
+    id: synt-echanges
+    attributes:
+      label: "Syntaxique — Description des échanges entre systèmes (optionnel)"
+      description: "Modules, rôles, interactions. Pour chaque échange : module source, destinataire, objectif, données transmises, prérequis/déclencheurs, actions, volume."
+    validations:
+      required: false
+
+  # ───────────────────────── SECTION 3 — Sémantique ─────────────────────────
+  - type: markdown
+    attributes:
+      value: "## 3. Expression de besoin sémantique (à remplir si concerné)"
+
+  - type: textarea
+    id: sem-cas-usage
+    attributes:
+      label: "Sémantique — Cas d'usage"
+      description: "Comment la ressource est/sera utilisée (production de soins, coordination, pilotage, exploitation de données)."
+    validations:
+      required: false
+
+  - type: textarea
+    id: sem-problematique
+    attributes:
+      label: "Sémantique — Problématique (situation actuelle vs cible, besoin en ressources)"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: sem-up
+    attributes:
+      label: "Sémantique — Unité de production connue ?"
+      options:
+        - "Sans objet"
+        - "Je connais l'unité de production"
+        - "Je ne connais pas l'unité de production"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sem-up-detail
+    attributes:
+      label: "Sémantique — Détails unité de production (organisme, composition équipe ; pas de noms de personnes)"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: sem-politique
+    attributes:
+      label: "Sémantique — Politique de gestion existante ?"
+      options:
+        - "Sans objet"
+        - "Oui"
+        - "Non"
+        - "Je ne sais pas"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: sem-licence
+    attributes:
+      label: "Sémantique — Soumise à une licence ?"
+      options:
+        - "Sans objet"
+        - "Oui"
+        - "Non"
+        - "Je ne sais pas"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sem-acces
+    attributes:
+      label: "Sémantique — Licence précisée + modalités d'accès (si licence autre que LOV2)"
+    validations:
+      required: false
+
+  - type: input
+    id: sem-format
+    attributes:
+      label: "Sémantique — Format actuel (Excel, PDF, Access…)"
+    validations:
+      required: false
+
+  - type: input
+    id: sem-volumetrie
+    attributes:
+      label: "Sémantique — Volumétrie estimée (nombre de concepts codés)"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: sem-maturite
+    attributes:
+      label: "Sémantique — Niveau de maturité"
+      options:
+        - "Sans objet"
+        - "En construction"
+        - "Stabilisée"
+        - "En usage"
+        - "En test"
+        - "Je ne sais pas"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sem-interactions
+    attributes:
+      label: "Sémantique — Interactions avec d'autres ressources (lesquelles ?)"
+    validations:
+      required: false
+
+  - type: input
+    id: sem-langues
+    attributes:
+      label: "Sémantique — Langues (Français et/ou autres, préciser)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sem-utilisateurs
+    attributes:
+      label: "Sémantique — Utilisateurs de la ressource (types, pas de personnes nommées)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sem-attentes
+    attributes:
+      label: "Sémantique — Attentes vis-à-vis de l'ANS (AMOA, publication, autres) + fréquence de mise à jour"
+    validations:
+      required: false
+
+  # ───────────────────────── SECTION 4 — Connaissance médicale ─────────────────────────
+  - type: markdown
+    attributes:
+      value: "## 4. Publication de connaissance médicale (à remplir si concerné)"
+
+  - type: dropdown
+    id: cm-nature
+    attributes:
+      label: "Connaissance médicale — Nature"
+      multiple: true
+      options:
+        - "Standardisation d'un GBPC"
+        - "Développement d'une bibliothèque CQL"
+        - "Déploiement de bibliothèques CQL en SADC (CDS Hooks)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: cm-cas-usage
+    attributes:
+      label: "Connaissance médicale — Cas d'usage (acteurs, flux, composants ; UML conseillé)"
+      description: "Méthode : https://ansforge.github.io/CISIS-doctrine-gouvernance/pages/docs/elaboration.html — joignez les diagrammes en images sans données personnelles."
+    validations:
+      required: false
+
+  # ───────────────────────── SECTION 5 — Compléments ─────────────────────────
+  - type: markdown
+    attributes:
+      value: "## 5. Informations complémentaires (optionnel)"
+
+  - type: textarea
+    id: commentaires
+    attributes:
+      label: Commentaires
+      description: "Tout élément essentiel non renseigné ci-dessus (ex. impact en cas de non prise en compte dans le CI-SIS)."
+    validations:
+      required: false
+
+  - type: textarea
+    id: documents
+    attributes:
+      label: Documents complémentaires (liste)
+      description: "Les documents contenant des données personnelles/sensibles sont à transmettre par e-mail, pas joints ici."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: rgpd
+    attributes:
+      label: Confirmation RGPD
+      options:
+        - label: "Je confirme n'avoir saisi aucune donnée à caractère personnel dans cette issue, et transmettre les coordonnées des acteurs par e-mail à ci-sis@esante.gouv.fr."
+          required: true

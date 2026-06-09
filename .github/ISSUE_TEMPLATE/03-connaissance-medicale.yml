@@ -1,0 +1,43 @@
+name: "Sous-besoin — Connaissance médicale"
+description: "Volet connaissance médicale (GBPC / CQL / SADC) d'un besoin CI-SIS. À rattacher comme sub-issue d'une issue parent."
+title: "[Connaissance médicale] "
+labels: ["expression-besoin", "connaissance-medicale", "sous-besoin"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Volet connaissance médicale
+
+        > [!NOTE]
+        > Volet d'un besoin global. La description générale est portée par l'issue parent.
+
+        > [!CAUTION]
+        > Issue publique : **aucune donnée personnelle**. Coordonnées par e-mail à ci-sis@esante.gouv.fr.
+
+  - type: input
+    id: parent
+    attributes:
+      label: Issue parent
+      description: "Numéro de l'issue d'expression de besoin globale (ex. #123)."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: cm-nature
+    attributes:
+      label: Nature
+      multiple: true
+      options:
+        - "Standardisation d'un GBPC"
+        - "Développement d'une bibliothèque CQL"
+        - "Déploiement de bibliothèques CQL en SADC (CDS Hooks)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: cm-cas-usage
+    attributes:
+      label: Cas d'usage (acteurs, flux, composants ; UML conseillé)
+      description: "Méthode : https://ansforge.github.io/CISIS-doctrine-gouvernance/pages/docs/elaboration.html — diagrammes en images, sans données personnelles."
+    validations:
+      required: true

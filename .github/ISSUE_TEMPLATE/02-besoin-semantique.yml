@@ -1,0 +1,128 @@
+name: "Sous-besoin — Sémantique"
+description: "Volet sémantique d'un besoin CI-SIS. À rattacher comme sub-issue d'une issue parent « Expression de besoin »."
+title: "[Sémantique] "
+labels: ["expression-besoin", "semantique", "sous-besoin"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Volet sémantique
+
+        > [!NOTE]
+        > Volet d'un besoin global. La description générale est portée par l'issue parent.
+
+        > [!CAUTION]
+        > Issue publique : **aucune donnée personnelle**. Coordonnées par e-mail à ci-sis@esante.gouv.fr.
+
+  - type: input
+    id: parent
+    attributes:
+      label: Issue parent
+      description: "Numéro de l'issue d'expression de besoin globale (ex. #123)."
+    validations:
+      required: true
+
+  - type: textarea
+    id: sem-cas-usage
+    attributes:
+      label: Cas d'usage
+      description: "Comment la ressource est/sera utilisée (production de soins, coordination, pilotage, exploitation de données)."
+    validations:
+      required: true
+
+  - type: textarea
+    id: sem-problematique
+    attributes:
+      label: Problématique (situation actuelle vs cible, besoin en ressources sémantiques)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: sem-up
+    attributes:
+      label: Unité de production connue ?
+      options:
+        - "Je connais l'unité de production"
+        - "Je ne connais pas l'unité de production"
+    validations:
+      required: true
+
+  - type: textarea
+    id: sem-up-detail
+    attributes:
+      label: Détails unité de production (organisme, composition équipe ; pas de noms de personnes)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: sem-politique
+    attributes:
+      label: Politique de gestion existante ?
+      options: ["Oui", "Non", "Je ne sais pas"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: sem-licence
+    attributes:
+      label: Soumise à une licence ?
+      options: ["Oui", "Non", "Je ne sais pas"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: sem-acces
+    attributes:
+      label: Licence précisée + modalités d'accès (si autre que LOV2)
+    validations:
+      required: true
+
+  - type: input
+    id: sem-format
+    attributes:
+      label: Format actuel (Excel, PDF, Access…)
+    validations:
+      required: true
+
+  - type: input
+    id: sem-volumetrie
+    attributes:
+      label: Volumétrie estimée (nombre de concepts codés)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: sem-maturite
+    attributes:
+      label: Niveau de maturité
+      options: ["En construction", "Stabilisée", "En usage", "En test", "Je ne sais pas"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: sem-interactions
+    attributes:
+      label: Interactions avec d'autres ressources (lesquelles ?)
+    validations:
+      required: false
+
+  - type: input
+    id: sem-langues
+    attributes:
+      label: Langues (Français et/ou autres, préciser)
+    validations:
+      required: true
+
+  - type: textarea
+    id: sem-utilisateurs
+    attributes:
+      label: Utilisateurs de la ressource (types, pas de personnes nommées)
+    validations:
+      required: true
+
+  - type: textarea
+    id: sem-attentes
+    attributes:
+      label: Attentes vis-à-vis de l'ANS (AMOA, publication, autres) + fréquence de mise à jour
+    validations:
+      required: true

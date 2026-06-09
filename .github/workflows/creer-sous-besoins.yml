@@ -1,0 +1,74 @@
+name: Créer les sous-besoins
+
+# Se déclenche à l'ouverture d'une issue. Le job ne s'exécute que si l'issue
+# porte le label "parent" (posé par le template 00-besoin-parent.yml).
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  creer-sous-issues:
+    if: contains(github.event.issue.labels.*.name, 'parent')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      OWNER: ${{ github.repository_owner }}
+      REPO: ${{ github.event.repository.name }}
+      PARENT_NUMBER: ${{ github.event.issue.number }}
+      PARENT_TITLE: ${{ github.event.issue.title }}
+      BODY: ${{ github.event.issue.body }}
+    steps:
+      - name: Récupérer l'ID de nœud de l'issue parent
+        id: parent
+        run: |
+          PARENT_ID=$(gh issue view "$PARENT_NUMBER" --repo "$OWNER/$REPO" --json id --jq .id)
+          echo "parent_id=$PARENT_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Créer les sous-issues selon les cases cochées
+        env:
+          PARENT_ID: ${{ steps.parent.outputs.parent_id }}
+        run: |
+          set -euo pipefail
+
+          # Lit le corps de l'issue et détecte les cases cochées "- [x]".
+          # On teste chaque volet par son libellé.
+          creer_sous_issue () {
+            local libelle="$1"      # ex. "Syntaxique"
+            local titre="$2"        # titre de la sous-issue
+            local label="$3"        # label thématique
+            local corps="$4"        # gabarit du corps
+
+            echo "$BODY" | grep -iqE "^\- \[x\] +${libelle}\b" || return 0
+
+            echo "Création de la sous-issue : $titre"
+            CHILD_URL=$(gh issue create \
+              --repo "$OWNER/$REPO" \
+              --title "$titre" \
+              --label "expression-besoin" --label "$label" --label "sous-besoin" \
+              --body "$corps")
+            CHILD_NUMBER="${CHILD_URL##*/}"
+
+            CHILD_ID=$(gh issue view "$CHILD_NUMBER" --repo "$OWNER/$REPO" --json id --jq .id)
+
+            # Lien parent-enfant via la mutation GraphQL addSubIssue
+            gh api graphql \
+              -H "GraphQL-Features: sub_issues" \
+              -f query='mutation($parent: ID!, $child: ID!) {
+                addSubIssue(input: { issueId: $parent, subIssueId: $child }) {
+                  subIssue { number }
+                }
+              }' \
+              -f parent="$PARENT_ID" \
+              -f child="$CHILD_ID"
+          }
+
+          CORPS_SYNT=$'## Volet syntaxique (parent #'"$PARENT_NUMBER"$')\n\nÀ compléter : cas d\x27usage, problématique d\x27interopérabilité, échanges entre systèmes.\n\n> Issue publique : aucune donnée personnelle. Coordonnées par e-mail à ci-sis@esante.gouv.fr.'
+          CORPS_SEM=$'## Volet sémantique (parent #'"$PARENT_NUMBER"$')\n\nÀ compléter : cas d\x27usage, problématique, unité de production, licence, format, volumétrie, maturité, langues, utilisateurs, attentes.\n\n> Issue publique : aucune donnée personnelle. Coordonnées par e-mail à ci-sis@esante.gouv.fr.'
+          CORPS_CM=$'## Volet connaissance médicale (parent #'"$PARENT_NUMBER"$')\n\nÀ compléter : nature (GBPC / CQL / SADC), cas d\x27usage (UML).\n\n> Issue publique : aucune donnée personnelle. Coordonnées par e-mail à ci-sis@esante.gouv.fr.'
+
+          creer_sous_issue "Syntaxique"            "[Syntaxique] $PARENT_TITLE"            "syntaxique"           "$CORPS_SYNT"
+          creer_sous_issue "Sémantique"            "[Sémantique] $PARENT_TITLE"            "semantique"           "$CORPS_SEM"
+          creer_sous_issue "Connaissance médicale" "[Connaissance médicale] $PARENT_TITLE" "connaissance-medicale" "$CORPS_CM"

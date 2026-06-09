@@ -1,0 +1,139 @@
+name: "Expression de besoin (parent)"
+description: "Description générale d'un besoin CI-SIS. Les volets syntaxique/sémantique/connaissance médicale seront créés en sous-issues."
+title: "[Besoin] "
+labels: ["expression-besoin", "parent"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Description générale du besoin (parent)
+
+        Renseignez ici la description générale. Selon les cases « nature du besoin »
+        cochées ci-dessous, un automate créera les **sous-issues** correspondantes
+        (syntaxique / sémantique / connaissance médicale), à compléter ensuite.
+
+        > [!CAUTION]
+        > Issue publique : **aucune donnée personnelle** (nom, e-mail, téléphone),
+        > ni pour vous ni pour les sponsors/parties prenantes. Organisation et rôle
+        > uniquement ; coordonnées par e-mail à ci-sis@esante.gouv.fr.
+
+  - type: input
+    id: titre
+    attributes:
+      label: Titre du besoin
+    validations:
+      required: true
+
+  - type: input
+    id: porteur-organisation
+    attributes:
+      label: Organisation porteuse du besoin
+    validations:
+      required: true
+
+  - type: input
+    id: sponsors
+    attributes:
+      label: Organismes sponsors
+    validations:
+      required: true
+
+  - type: input
+    id: parties-prenantes
+    attributes:
+      label: Parties prenantes (optionnel)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: cadre-projet
+    attributes:
+      label: Cadre projet/programme ?
+      options: ["Non", "Oui (préciser ci-dessous)"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: cadre-projet-detail
+    attributes:
+      label: Précisions cadre projet (optionnel)
+    validations:
+      required: false
+
+  - type: textarea
+    id: contraintes-delai
+    attributes:
+      label: Délai et contraintes projet (optionnel)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: impact-systemes
+    attributes:
+      label: "Impact sur les systèmes (1=faible … 5=fort)"
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: interet-ecosysteme
+    attributes:
+      label: "Intérêt pour l'écosystème (1=faible … 5=fort)"
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexite
+    attributes:
+      label: "Complexité (1=faible … 5=fort)"
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risque
+    attributes:
+      label: "Risque à ne pas faire (1=faible … 5=fort)"
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: impacts-justification
+    attributes:
+      label: Justification des impacts et intérêts
+    validations:
+      required: true
+
+  - type: textarea
+    id: synthese
+    attributes:
+      label: Synthèse du besoin (quelques lignes)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: nature
+    attributes:
+      label: Nature du besoin — volets à créer en sous-issues
+      description: "Cochez les volets concernés. L'automate créera une sous-issue par case cochée."
+      options:
+        - label: "Syntaxique"
+        - label: "Sémantique"
+        - label: "Connaissance médicale"
+
+  - type: textarea
+    id: commentaires
+    attributes:
+      label: Informations complémentaires (optionnel)
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: rgpd
+    attributes:
+      label: Confirmation RGPD
+      options:
+        - label: "Je confirme n'avoir saisi aucune donnée à caractère personnel dans cette issue, et transmettre les coordonnées par e-mail à ci-sis@esante.gouv.fr."
+          required: true
