@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Coordonnées / contact nominatif
+    url: mailto:ci-sis@esante.gouv.fr
+    about: >-
+      Une issue GitHub est publique. Ne saisissez aucun nom, e-mail ou téléphone.
+      Transmettez les coordonnées et pièces jointes nominatives par e-mail en
+      rappelant le numéro de l'issue.
   - name: Processus
     url: https://interop.esante.gouv.fr/ig/doctrine/ebe-cp.html
     about: Information sur le processus de traitement de vos demandes
