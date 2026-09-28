@@ -1,7 +1,7 @@
 name: "Expression de besoin d'interopérabilité (CI-SIS)"
 description: "Formulaire unique : description générale + sections syntaxique / sémantique / connaissance médicale selon le besoin."
-title: "[Besoin] "
-labels: ["expression-besoin"]
+title: "[EBE]: "
+labels: ["EBE"]
 body:
   - type: markdown
     attributes:
@@ -17,8 +17,7 @@ body:
         > Une issue GitHub est **publique**. **Ne renseignez ici aucune donnée à
         > caractère personnel** (nom, prénom, e-mail nominatif, téléphone), ni pour
         > vous, ni pour les sponsors ou parties prenantes. Désignez les acteurs par
-        > **organisation** et **rôle** uniquement, et transmettez les coordonnées
-        > **par e-mail** à `ci-sis@esante.gouv.fr` en rappelant le numéro de l'issue.
+        > **organisation** et **rôle** uniquement.
 
   # ───────────────────────── SECTION 1 — Description générale ─────────────────────────
   - type: markdown
